@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { auth } from "../firebase";
+
+import { useCallback, useState } from "react";
 import { useHistory } from "react-router-dom";
 
 const Register = () => {
@@ -29,8 +31,29 @@ const Register = () => {
       return setErrorRegister("A senha precisa ter no mínimo 6 caracteres.");
 
     setErrorRegister(false);
-    console.log(dataUserRegister);
+
+    registerUser();
   };
+
+  const registerUser = useCallback(async () => {
+    try {
+      const res = await auth.createUserWithEmailAndPassword(
+        dataUserRegister.email,
+        dataUserRegister.password
+      );
+      setDataUserRegister({
+        email: "",
+        password: "",
+      });
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+      if (error.code === "auth/invalid-email")
+        return setErrorRegister("Email inválido.");
+      if (error.code === "auth/email-already-in-use")
+        return setErrorRegister("Email já cadastrado.");
+    }
+  }, [dataUserRegister]);
 
   return (
     <div className="Login-Component">
