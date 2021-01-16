@@ -1,0 +1,13 @@
+.Login-Component {
+  display: flex;
+  height: calc(100vh - 56px);
+  align-items: center;
+  justify-content: center;
+}
+
+.form-login {
+  width: 416px;
+  background-color: #343a40;
+  padding: 24px;
+  border-radius: 8px;
+}
