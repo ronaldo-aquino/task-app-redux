@@ -1,22 +1,45 @@
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
 import Admin from "./components/Admin";
 import Login from "./components/Login";
 import Navbar from "./components/Navbar";
 import Register from "./components/Register";
+import { currentUserFirebase } from "./redux/userDucks";
 
 const App = () => {
-  return (
+  const dispatch = useDispatch();
+  const { currentUser } = useSelector(({ user }) => user);
+
+  useEffect(() => {
+    dispatch(currentUserFirebase());
+  }, [dispatch]);
+
+  const MyRoute = ({ component, path, ...rest }) => {
+    if (currentUser) {
+      return <Route component={component} path={path} {...rest} />;
+    } else {
+      return <Redirect to="./login" {...rest} />;
+    }
+  };
+
+  return currentUser !== false ? (
     <Router>
       <Navbar />
       <div className="container">
         <Switch>
-          <Route exact path="/" component={Register} />
-          <Route exact path="/login" component={Login} />
-          <Route exact path="/admin" component={Admin} />
+          <Route component={Register} path="/" exact />
+          <Route component={Login} path="/login" exact />
+          <MyRoute component={Admin} path="/admin" exact />
         </Switch>
       </div>
     </Router>
-  );
+  ): <p>Carregando</p>
 };
 
 export default App;

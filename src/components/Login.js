@@ -46,7 +46,7 @@ const Login = () => {
         password: "",
       });
       setErrorLogin(null);
-      history.push("/admin")
+      history.push("/admin");
     } catch (error) {
       const emailError = error.code === "auth/user-not-found";
       const passwordError = error.code === "auth/wrong-password";
