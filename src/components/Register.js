@@ -37,7 +37,7 @@ const Register = () => {
 
   const registerUser = useCallback(async () => {
     try {
-      const res = await auth.createUserWithEmailAndPassword(
+      await auth.createUserWithEmailAndPassword(
         dataUserRegister.email,
         dataUserRegister.password
       );
@@ -45,9 +45,8 @@ const Register = () => {
         email: "",
         password: "",
       });
-      console.log(res);
+      setErrorRegister(null);
     } catch (error) {
-      console.log(error);
       if (error.code === "auth/invalid-email")
         return setErrorRegister("Email inválido.");
       if (error.code === "auth/email-already-in-use")
