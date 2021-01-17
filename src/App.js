@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 import AddTaskForm from "./components/AddTaskForm";
 import Admin from "./components/Admin";
+import EditTask from "./components/EditTask";
 import Login from "./components/Login";
 import Navbar from "./components/Navbar";
 import Register from "./components/Register";
@@ -38,6 +39,7 @@ const App = () => {
           <Route component={Login} path="/login" exact />
           <MyRoute component={Admin} path="/admin" exact />
           <MyRoute component={AddTaskForm} path="/add-tarefa" exact />
+          <MyRoute component={EditTask} path="/editar-tarefa" exact />
         </Switch>
       </div>
     </Router>

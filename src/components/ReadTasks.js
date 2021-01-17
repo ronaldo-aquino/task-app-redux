@@ -1,80 +1,30 @@
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { db } from "../firebase";
+import {
+  deleteTask,
+  finishedTask,
+  getDataTasks,
+  modeEdit,
+} from "../redux/taskDucks";
 
 const ReadTask = () => {
   const history = useHistory();
-  const { currentUser } = useSelector(({ user }) => user);
 
-  const [tasks, setTasks] = useState([]);
-  const [editMode, setEditMode] = useState(false);
-  const [idTaskCurrent, setIdTaskCurrent] = useState("");
+  const dispatch = useDispatch();
+  const { tasks } = useSelector(({ taskFirebase }) => taskFirebase);
 
   useEffect(() => {
     const getData = async () => {
-      try {
-        const { docs } = await db
-          .collection("users")
-          .doc(currentUser.uid)
-          .collection("task")
-          .orderBy("finished")
-          .get();
-
-        const setTasksArray = docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-
-        setTasks(setTasksArray);
-      } catch (error) {
-        console.log(error);
-      }
+      dispatch(getDataTasks());
     };
 
     getData();
-  }, [currentUser]);
+  }, [dispatch]);
 
-  const deleteTask = async (idTask) => {
-    try {
-      await db
-        .collection("users")
-        .doc(currentUser.uid)
-        .collection("task")
-        .doc(idTask)
-        .delete();
-
-      const filterArray = tasks.filter((task) => task.id !== idTask);
-      setTasks(filterArray);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const finishedTask = async (idTask) => {
-    try {
-      await db
-        .collection("users")
-        .doc(currentUser.uid)
-        .collection("task")
-        .doc(idTask)
-        .update({
-          finished: true,
-        });
-
-      const tasksFinishedMap = tasks.map((task) =>
-        task.id === idTask ? { ...task, finished: true } : task
-      );
-
-      setTasks(tasksFinishedMap);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const modeEdit = (task) => {
-    setIdTaskCurrent(task.id);
-    setEditMode(true);
+  const editMode = (task) => {
+    dispatch(modeEdit(task));
+    history.push('./editar-tarefa');
   };
 
   return (
@@ -114,7 +64,7 @@ const ReadTask = () => {
                   <div>
                     <button
                       className="btn btn-sm btn-dark mr-2"
-                      onClick={() => finishedTask(task.id)}
+                      onClick={() => dispatch(finishedTask(task.id))}
                       disabled={task.finished}
                     >
                       Finalizar
@@ -122,13 +72,13 @@ const ReadTask = () => {
                     <button
                       className="btn btn-sm btn-warning mr-2"
                       disabled={task.finished}
-                      onClick={() => modeEdit(task)}
+                      onClick={() => editMode(task)}
                     >
                       Editar
                     </button>
                     <button
                       className="btn btn-sm btn-danger"
-                      onClick={() => deleteTask(task.id)}
+                      onClick={() => dispatch(deleteTask(task.id))}
                     >
                       Excluir
                     </button>

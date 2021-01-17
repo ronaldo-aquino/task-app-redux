@@ -1,32 +1,35 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { addTask, onChangeModelTask } from "../redux/taskDucks";
+import { editTask, onChangeModelTaskEdit } from "../redux/taskDucks";
 import "./AddTaskForm.css";
 
-const AddTaskForm = () => {
+const EditTask = () => {
   const history = useHistory();
   const dispatch = useDispatch();
-  const { taskAddModel } = useSelector(({ taskFirebase }) => taskFirebase);
+  const { task } = useSelector(
+    ({ taskFirebase }) => taskFirebase
+  );
 
   const handleOnChangeTask = (e) => {
-    dispatch(onChangeModelTask(e));
+    dispatch(onChangeModelTaskEdit(e));
   };
 
-  const handleSumitAddTask = async (e) => {
+  const handleSumitEditTask = async (e) => {
     e.preventDefault();
 
-    const emptyTitle = !taskAddModel.title.trim();
-    const emptyDescription = !taskAddModel.description.trim();
+    const emptyTitle = !task.title.trim();
+    const emptyDescription = !task.description.trim();
     if (emptyTitle || emptyDescription)
       return console.log("Nenhum campo pode fica fazio.");
 
-    dispatch(addTask(taskAddModel));
+    dispatch(editTask());
+
     history.push("./admin");
   };
 
   return (
     <div className="form-add-task">
-      <form onSubmit={handleSumitAddTask} className="form-add-task-content">
+      <form onSubmit={handleSumitEditTask} className="form-add-task-content">
         <div className="form-group">
           <label>Título da tarefa</label>
           <input
@@ -35,7 +38,7 @@ const AddTaskForm = () => {
             className="form-control"
             placeholder="Digite aqui sua tarefa"
             onChange={(e) => handleOnChangeTask(e)}
-            value={taskAddModel.title}
+            value={task.title}
           />
         </div>
         <div className="form-group">
@@ -45,13 +48,13 @@ const AddTaskForm = () => {
             className="form-control"
             placeholder="Digite uma descrição curta."
             onChange={(e) => handleOnChangeTask(e)}
-            value={taskAddModel.description}
+            value={task.description}
           ></textarea>
         </div>
 
         <div className="d-flex justify-content-center align-items-center">
           <button type="submit" className="btn btn-dark">
-            Salvar Tarefa
+            Editar Tarefa
           </button>
         </div>
       </form>
@@ -59,4 +62,4 @@ const AddTaskForm = () => {
   );
 };
 
-export default AddTaskForm;
+export default EditTask;
