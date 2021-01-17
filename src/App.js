@@ -6,6 +6,7 @@ import {
   Route,
   Redirect,
 } from "react-router-dom";
+import AddTaskForm from "./components/AddTaskForm";
 import Admin from "./components/Admin";
 import Login from "./components/Login";
 import Navbar from "./components/Navbar";
@@ -36,6 +37,7 @@ const App = () => {
           <Route component={Register} path="/" exact />
           <Route component={Login} path="/login" exact />
           <MyRoute component={Admin} path="/admin" exact />
+          <MyRoute component={AddTaskForm} path="/add-tarefa" exact />
         </Switch>
       </div>
     </Router>

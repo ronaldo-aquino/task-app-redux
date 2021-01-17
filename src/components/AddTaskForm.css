@@ -1,0 +1,10 @@
+.form-add-task {
+  display: flex;
+  height: calc(100vh - 56px);
+  align-items: center;
+  justify-content: center;
+}
+
+.form-add-task-content {
+  width: 500px;
+}
