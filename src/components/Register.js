@@ -46,13 +46,14 @@ const Register = () => {
         password: "",
       });
       setErrorRegister(null);
+      history.push("./admin");
     } catch (error) {
       if (error.code === "auth/invalid-email")
         return setErrorRegister("Email inválido.");
       if (error.code === "auth/email-already-in-use")
         return setErrorRegister("Email já cadastrado.");
     }
-  }, [dataUserRegister]);
+  }, [dataUserRegister, history]);
 
   return (
     <div className="Login-Component">
