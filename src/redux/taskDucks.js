@@ -70,7 +70,8 @@ const taskReducer = (state = initialState, action) => {
     case TASK_EDIT:
       return {
         ...state,
-        taskAddModel: action.payload,
+        taskAddModel: action.payload.taskAddModel,
+        tasks: action.payload.tasks,
       };
 
     default:
@@ -190,7 +191,7 @@ export const onChangeModelTaskEdit = (e) => (dispatch, getState) => {
 };
 
 export const editTask = () => async (dispatch, getState) => {
-  const { task, idTaskCurrent } = getState().taskFirebase;
+  const { task, idTaskCurrent, tasks } = getState().taskFirebase;
   const { currentUser } = getState().user;
 
   try {
@@ -201,12 +202,15 @@ export const editTask = () => async (dispatch, getState) => {
       .doc(idTaskCurrent)
       .update(task);
 
+    const editTaskMap = tasks.map((taskEdit) =>
+      taskEdit.id === idTaskCurrent ? task : taskEdit
+    );
+
     dispatch({
       type: TASK_EDIT,
       payload: {
-        title: "",
-        description: "",
-        finished: false,
+        taskAddModel: { title: "", description: "", finished: false },
+        tasks: editTaskMap,
       },
     });
   } catch (error) {
