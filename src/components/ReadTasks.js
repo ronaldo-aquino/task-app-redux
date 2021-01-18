@@ -8,6 +8,8 @@ import {
   modeEdit,
 } from "../redux/taskDucks";
 
+import "./ReadTasks.css";
+
 const ReadTask = () => {
   const history = useHistory();
 
@@ -24,7 +26,7 @@ const ReadTask = () => {
 
   const editMode = (task) => {
     dispatch(modeEdit(task));
-    history.push('./editar-tarefa');
+    history.push("./editar-tarefa");
   };
 
   return (
@@ -51,8 +53,12 @@ const ReadTask = () => {
           {tasks &&
             tasks.map((task) => (
               <tr key={task.id}>
-                <td>{task.title}</td>
-                <td>{task.description}</td>
+                <td className={task.finished ? "finished-task" : undefined}>
+                  {task.title}
+                </td>
+                <td className={task.finished ? "finished-task" : undefined}>
+                  {task.description}
+                </td>
                 <td>
                   {task.finished ? (
                     <span className="badge badge-success p-1">SIM</span>
